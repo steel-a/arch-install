@@ -16,15 +16,4 @@ n # new partition
 	# default, extend partition to end of disk
 p # print partition table
 w # write the partition table
-EOF	
-
-HD_EFI="${HD}1"
-HD_LINUX="${HD}2"
-
-# Format Partitions
-mkfs.fat -F32 /dev/$HD_EFI
-mkfs.ext4 /dev/$HD_LINUX
-
-# Mount Partitions
-mount /dev/$HD_LINUX /mnt
-mount /dev/$HD_EFI /mnt/boot
+EOF
