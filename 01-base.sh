@@ -1,17 +1,21 @@
-	# List of variables
+# List of variables
 
-	#Connected via cable
-	KEYBOARD="us-acentos"
-	REGION="America"
-	CITY="Sao_Paulo"
-	HOST_NAME="home01"
-	SWAP_SIZE="2048M"
-	WORK_USER="mi"
+#Connected via cable
+KEYBOARD="us-acentos"
+REGION="America"
+CITY="Sao_Paulo"
+HOST_NAME="home01"
+SWAP_SIZE="2048M"
+WORK_USER="mi"
 
-	PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
+PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 
-	# Get first Disk from fdisk -l
-	HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z]*)")"
+# Get first Disk from fdisk -l
+HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z]*)")"
+
+# If install.txt exists, we are into installation environment
+FILE="./install.txt"
+if test -f "$FILE"; then
 
 	# Verify the boot mode, if efivars directory exists, boot mode = EFI
 	DIR="/sys/firmware/efi/efivars/"
@@ -46,13 +50,16 @@
 	# Edit mirros /etc/pacman.d/mirrorlist
 
 	# Install LTS with NO FIRMWARE
-	pacstrap /mnt base linux-lts
+	pacstrap /mnt base linux-lts linux-firmware
 
 	# Generate fstab
 	genfstab -U /mnt > /mnt/etc/fstab
 
 	# Change root into the new system
-	arch-chroot /mnt
+	cp ./01-base.sh /mnt/root/01-base.sh
+	arch-chroot /mnt /root/01-base.sh
+
+else # If install.txt does not exists, we are at the new installed environment
 
 	# Create swapfile
 	fallocate -l ${SWAP_SIZE} /swapfile
@@ -87,11 +94,12 @@
 	useradd -m -g users -G wheel $WORK_USER
 	pacman -Sy sudo
 	echo "mi ALL=(ALL) ALL" >> /etc/sudoers
-	
+
 	#Install grub
 	sh $GRUB_INSTALL_COMMAND
 	sh $GRUB_INSTALL_COMMAND2
-	
+
 	# Set the root password
 	passwd
 	passwd $WORK_USER
+fi
