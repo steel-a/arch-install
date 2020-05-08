@@ -98,8 +98,10 @@ else # If install.txt does not exists, we are at the new installed environment
 		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck
 	else
 		yes | pacman -S grub
-		grub-install --target=i386-pc /dev/${HD}
+		grub-install --target=i386-pc --recheck /dev/${HD}
 	fi
+	cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo
+	grub-mkconfig -o /boot/grub/grub.cfg
 	
 	# Set the root other user passwords
 	clear
