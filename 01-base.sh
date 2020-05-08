@@ -18,25 +18,47 @@ DIR="/sys/firmware/efi/efivars/"
 if [ -d "$DIR" ]; then
 	HD_EFI="${HD}1
 	HD_LINUX=${HD}2
-	echo "Please, create the following partitions with fdisk: $HD_EFI (512Mb), $HD_LINUX"
+
+	sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/$HD
+	g # new GPT partition table
+	n # new partition
+	1 # partition number 1
+		# default - start at beginning of disk 
+	+512M # 512 MB boot parttion
+	t # chose type
+	1 # type EFI
+	n # new partition
+	2 # partion number 2
+		# default, start immediately after preceding partition
+		# default, extend partition to end of disk
+	w # write the partition table
+	EOF	
+
 	read p
-	fdisk /dev/$HD
+
 	mkfs.fat -F32 /dev/$HD_EFI
 	mkfs.ext4 /dev/$HD_LINUX
 	mount /dev/$HD_LINUX /mnt
 	mount /dev/$HD_EFI /mnt/boot
 else
 	HD_LINUX=${HD}1
-	echo "Please, create the following partition with fdisk: $HD_LINUX"
-	exit 1
+
+	sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/$HD
+	g # new GPT partition table
+	n # new partition
+	1 # partition number 1
+		# default - start at beginning of disk 
+		# default, start immediately after preceding partition
+	w # write the partition table
+	EOF	
+
 	read p
-	fdisk /dev/$HD
+
 	mkfs.ext4 /dev/$HD_LINUX
 	mount /dev/$HD_LINUX /mnt
+	exit 1
 fi
 
-#TODO: Automatic fdisk partition
-#g,n,1,2048,+512M,t,1,n,2,<enter>,<enter>,w
 
 
 # Edit mirros /etc/pacman.d/mirrorlist
