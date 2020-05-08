@@ -6,6 +6,7 @@
 	CITY="Sao_Paulo"
 	HOST_NAME="home01"
 	SWAP_SIZE="2048M"
+	WORK_USER="mi"
 
 	PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 
@@ -15,6 +16,8 @@
 	# Verify the boot mode, if efivars directory exists, boot mode = EFI
 	DIR="/sys/firmware/efi/efivars/"
 	if [ -d "$DIR" ]; then
+		GRUB_INSTALL_COMMAND="pacman -Sy grub-efi-x86_64 efibootmgr"
+		GRUB_INSTALL_COMMAND2="grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck"
 		HD_EFI="${HD}1"
 		HD_LINUX="${HD}2"
 		wget ${PROJ_PATH}create-partitions-boot-linux.sh
@@ -23,15 +26,18 @@
 		yes | mkfs.fat -F32 /dev/$HD_EFI
 		yes | mkfs.ext4 /dev/$HD_LINUX
 		mount /dev/$HD_LINUX /mnt
+		mkdir /mnt/boot
+		mkdir /mnt/boot/efi
 		mount /dev/$HD_EFI /mnt/boot
 	else
+		GRUB_INSTALL_COMMAND="pacman -Sy grub"
+		GRUB_INSTALL_COMMAND2="grub-install --target=i386-pc /dev/${HD}"
 		HD_LINUX=${HD}1
 		wget ${PROJ_PATH}create-partition-linux.sh
 		chmod 700 create-partition-linux.sh
 		./create-partition-linux.sh
 		yes | mkfs.ext4 /dev/$HD_LINUX
 		mount /dev/$HD_LINUX /mnt
-		exit 1
 	fi
 
 	# Atualizar relógio do sistema
@@ -45,16 +51,16 @@
 	# Generate fstab
 	genfstab -U /mnt > /mnt/etc/fstab
 
+	# Change root into the new system
+	arch-chroot /mnt
+
 	# Create swapfile
 	fallocate -l ${SWAP_SIZE} /swapfile
 	ls -lh /swapfile
 	chmod 600 /swapfile
 	mkswap /swapfile
 	swapon /swapfile
-	echo "/swapfile	none	swap	defaults	0	0" >> /mnt/etc/fstab
-
-	# Change root into the new system
-	arch-chroot /mnt
+	echo "/swapfile	none	swap	defaults	0	0" >> /etc/fstab
 
 	# Set the time zone
 	ln -sf /usr/share/zoneinfo/${REGION}/${CITY} /etc/localtime
@@ -77,7 +83,15 @@
 	echo "::1		localhost.localdomain	localhost" >> /etc/hosts
 	echo "127.0.1.1	home01.localdomain	${HOST_NAME}" >> /etc/hosts
 
-	#TODO: Install grub
-
+	# Create new user
+	useradd -m -g users -G wheel $WORK_USER
+	pacman -Sy sudo
+	echo "mi ALL=(ALL) ALL" >> /etc/sudoers
+	
+	#Install grub
+	sh $GRUB_INSTALL_COMMAND
+	sh $GRUB_INSTALL_COMMAND2
+	
 	# Set the root password
 	passwd
+	passwd $WORK_USER
