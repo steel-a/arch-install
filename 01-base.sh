@@ -94,11 +94,11 @@ else # If install.txt does not exists, we are at the new installed environment
 	#Install grub
 	DIR="/boot/efi/"
 	if [ -d "$DIR" ]; then
-		GRUB_INSTALL_COMMAND="pacman -Sy grub-efi-x86_64 efibootmgr"
-		GRUB_INSTALL_COMMAND2="grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck"
+		yes | pacman -Sy grub-efi-x86_64 efibootmgr
+		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck
 	else
-		GRUB_INSTALL_COMMAND="pacman -Sy grub"
-		GRUB_INSTALL_COMMAND2="grub-install --target=i386-pc /dev/${HD}"
+		yes | pacman -Sy grub
+		grub-install --target=i386-pc /dev/${HD}
 	fi
 	
 	# Set the root password
