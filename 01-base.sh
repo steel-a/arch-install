@@ -7,59 +7,37 @@ CITY="Sao_Paulo"
 HOST_NAME="home01"
 SWAP_SIZE="2048M"
 
-# Get first Disk from fdisk -l
-HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z]*))"
+PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 
-# Atualizar relógio do sistema
-timedatectl set-ntp true
+# Get first Disk from fdisk -l
+HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z]*)")"
 
 # Verify the boot mode, if efivars directory exists, boot mode = EFI
 DIR="/sys/firmware/efi/efivars/"
 if [ -d "$DIR" ]; then
-	HD_EFI="${HD}1
-	HD_LINUX=${HD}2
-
-	sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/$HD
-	g # new GPT partition table
-	n # new partition
-	1 # partition number 1
-		# default - start at beginning of disk 
-	+512M # 512 MB boot parttion
-	t # chose type
-	1 # type EFI
-	n # new partition
-	2 # partion number 2
-		# default, start immediately after preceding partition
-		# default, extend partition to end of disk
-	w # write the partition table
-	EOF	
-
-	read p
-
+	HD_EFI="${HD}1"
+	HD_LINUX="${HD}2"
+	wget ${PROJ_PATH}create-partitions-boot-linux.sh
+	chmod 700 create-partitions-boot-linux.sh
+	create-partitions-boot-linux.sh
 	mkfs.fat -F32 /dev/$HD_EFI
 	mkfs.ext4 /dev/$HD_LINUX
 	mount /dev/$HD_LINUX /mnt
 	mount /dev/$HD_EFI /mnt/boot
 else
 	HD_LINUX=${HD}1
-
-	sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/$HD
-	g # new GPT partition table
-	n # new partition
-	1 # partition number 1
-		# default - start at beginning of disk 
-		# default, start immediately after preceding partition
-	w # write the partition table
-	EOF	
-
-	read p
-
+	wget ${PROJ_PATH}create-partition-linux.sh
+	chmod 700 create-partition-linux.sh
+	create-partition-linux.sh
 	mkfs.ext4 /dev/$HD_LINUX
 	mount /dev/$HD_LINUX /mnt
 	exit 1
 fi
 
+read p
 
+# Atualizar relógio do sistema
+timedatectl set-ntp true
 
 # Edit mirros /etc/pacman.d/mirrorlist
 
