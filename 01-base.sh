@@ -20,8 +20,6 @@ if test -f "$FILE"; then
 	# Verify the boot mode, if efivars directory exists, boot mode = EFI
 	DIR="/sys/firmware/efi/efivars/"
 	if [ -d "$DIR" ]; then
-		GRUB_INSTALL_COMMAND="pacman -Sy grub-efi-x86_64 efibootmgr"
-		GRUB_INSTALL_COMMAND2="grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck"
 		HD_EFI="${HD}1"
 		HD_LINUX="${HD}2"
 		wget ${PROJ_PATH}create-partitions-boot-linux.sh
@@ -34,8 +32,6 @@ if test -f "$FILE"; then
 		mkdir /mnt/boot/efi
 		mount /dev/$HD_EFI /mnt/boot
 	else
-		GRUB_INSTALL_COMMAND="pacman -Sy grub"
-		GRUB_INSTALL_COMMAND2="grub-install --target=i386-pc /dev/${HD}"
 		HD_LINUX=${HD}1
 		wget ${PROJ_PATH}create-partition-linux.sh
 		chmod 700 create-partition-linux.sh
@@ -92,14 +88,22 @@ else # If install.txt does not exists, we are at the new installed environment
 
 	# Create new user
 	useradd -m -g users -G wheel $WORK_USER
-	pacman -Sy sudo
-	echo "mi ALL=(ALL) ALL" >> /etc/sudoers
+	yes | pacman -S sudo
+	echo "${WORK_USER} ALL=(ALL) ALL" >> /etc/sudoers
 
 	#Install grub
-	sh $GRUB_INSTALL_COMMAND
-	sh $GRUB_INSTALL_COMMAND2
-
+	DIR="/boot/efi/"
+	if [ -d "$DIR" ]; then
+		GRUB_INSTALL_COMMAND="pacman -Sy grub-efi-x86_64 efibootmgr"
+		GRUB_INSTALL_COMMAND2="grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=arch_grub --recheck"
+	else
+		GRUB_INSTALL_COMMAND="pacman -Sy grub"
+		GRUB_INSTALL_COMMAND2="grub-install --target=i386-pc /dev/${HD}"
+	fi
+	
 	# Set the root password
 	passwd
+	echo ""
+	echo "Set password for ${WORK_USER}"
 	passwd $WORK_USER
 fi
