@@ -1,5 +1,5 @@
 # Get first Disk from fdisk -l
-HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z]*)")"
+HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z0-9]*)")"
 
 # Automatic send keys to fdisk, create EFI partition, then Linux partition
 sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/$HD
