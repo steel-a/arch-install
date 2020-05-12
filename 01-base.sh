@@ -7,6 +7,7 @@ CITY="Sao_Paulo"
 HOST_NAME="home01"
 SWAP_SIZE="2048M"
 WORK_USER="mi"
+SSH_PORT="63169"
 
 
 PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
@@ -55,6 +56,7 @@ if test -f "$FILE"; then
 	# Change root into the new system
 	cp ./01-base.sh /mnt/root/01-base.sh
 	arch-chroot /mnt /root/01-base.sh
+	rm /mnt/root/01-base.sh
 
 else # If install.txt does not exists, we are at the new installed environment
 
