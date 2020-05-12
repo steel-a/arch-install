@@ -104,6 +104,10 @@ else # If install.txt does not exists, we are at the new installed environment
 	cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo
 	grub-mkconfig -o /boot/grub/grub.cfg
 	
+	# Install DHCPCD
+	yes | pacman -S dhcpcd
+	systemctl enable dhcpcd
+	
 	# Install OpenSSH
 	yes | pacman -S openssh
 	sed -i 's/#Port /Port /g' /etc/ssh/sshd_config
