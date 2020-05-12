@@ -48,7 +48,8 @@ if test -f "$FILE"; then
 	# Edit mirros /etc/pacman.d/mirrorlist
 
 	# Install LTS with NO FIRMWARE
-	pacstrap /mnt base linux-lts linux-firmware
+	pacstrap /mnt base linux-lts
+	#linux-firmware not installed
 
 	# Generate fstab
 	genfstab -U /mnt > /mnt/etc/fstab
