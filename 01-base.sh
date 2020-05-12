@@ -112,11 +112,10 @@ else # If install.txt does not exists, we are at the new installed environment
 	
 	# Install OpenSSH
 	yes | pacman -S openssh
-	sed -i 's/#Port /Port /g' /etc/ssh/sshd_config
-	sed -i 's/Port 22/Port ${SSH_PORT}/g' /etc/ssh/sshd_config
 	sed -i 's/#PermitRootLogin /PermitRootLogin /g' /etc/ssh/sshd_config
 	sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
 	sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin no/g' /etc/ssh/sshd_config
+	echo "Port ${SSH_PORT}" >> /etc/ssh/sshd_config
 	echo "Protocol 2" >> /etc/ssh/sshd_config
 	echo "AllowUsers ${WORK_USER}" >> /etc/ssh/sshd_config
 	echo "MaxStartups 3" >> /etc/ssh/sshd_config
