@@ -22,8 +22,13 @@ if test -f "$FILE"; then
 	# Verify the boot mode, if efivars directory exists, boot mode = EFI
 	DIR="/sys/firmware/efi/efivars/"
 	if [ -d "$DIR" ]; then
-		HD_EFI="${HD}1"
-		HD_LINUX="${HD}2"
+		if [[ $HD == *"mmcblk"* ]]; then
+			HD_EFI="${HD}p1"
+			HD_LINUX="${HD}p2"
+		else
+			HD_EFI="${HD}1"
+			HD_LINUX="${HD}2"
+		fi
 		wget ${PROJ_PATH}create-partitions-boot-linux.sh
 		chmod 700 create-partitions-boot-linux.sh
 		./create-partitions-boot-linux.sh
@@ -34,7 +39,11 @@ if test -f "$FILE"; then
 		mkdir /mnt/boot/efi
 		mount /dev/$HD_EFI /mnt/boot
 	else
-		HD_LINUX=${HD}1
+		if [[ $HD == *"mmcblk"* ]]; then
+			HD_LINUX=${HD}p1
+		else
+			HD_LINUX=${HD}1
+		fi
 		wget ${PROJ_PATH}create-partition-linux.sh
 		chmod 700 create-partition-linux.sh
 		./create-partition-linux.sh
