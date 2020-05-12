@@ -13,7 +13,7 @@ SSH_PORT="63169"
 PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 
 # Get first Disk from fdisk -l
-HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z]*)")"
+HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z0-9]*)")"
 
 # If install.txt exists, we are into installation environment
 FILE="./install.txt"
