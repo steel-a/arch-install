@@ -8,6 +8,7 @@ HOST_NAME="home01"
 SWAP_SIZE="2048M"
 WORK_USER="mi"
 
+
 PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 
 # Get first Disk from fdisk -l
@@ -103,7 +104,23 @@ else # If install.txt does not exists, we are at the new installed environment
 	cp /usr/share/locale/en\@quot/LC_MESSAGES/grub.mo /boot/grub/locale/en.mo
 	grub-mkconfig -o /boot/grub/grub.cfg
 	
-	# Set the root other user passwords
+	# Install OpenSSH
+	yes | pacman -S openssh
+	sed -i 's/#Port /Port /g' /etc/ssh/sshd_config
+	sed -i 's/Port 22/Port ${SSH_PORT}/g' /etc/ssh/sshd_config
+	sed -i 's/#PermitRootLogin /PermitRootLogin /g' /etc/ssh/sshd_config
+	sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+	sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin no/g' /etc/ssh/sshd_config
+	echo "Protocol 2" >> /etc/ssh/sshd_config
+	echo "AllowUsers ${WORK_USER}" >> /etc/ssh/sshd_config
+	echo "MaxStartups 3" >> /etc/ssh/sshd_config
+	systemctl enable sshd
+	
+	# Install Docker
+	yes | pacman -S docker
+	systemctl enable docker
+	
+	# Set the root and other user passwords
 	clear
 	echo "Set password for root user"
 	passwd
