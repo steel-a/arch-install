@@ -36,8 +36,8 @@ if test -f "$FILE"; then
 		yes | mkfs.ext4 /dev/$HD_LINUX
 		mount /dev/$HD_LINUX /mnt
 		mkdir /mnt/boot
-		mkdir /mnt/boot/efi
 		mount /dev/$HD_EFI /mnt/boot
+		mkdir /mnt/boot/efi
 	else
 		if [[ $HD == *"mmcblk"* ]]; then
 			HD_LINUX=${HD}p1
