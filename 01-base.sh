@@ -1,6 +1,6 @@
-# List of variables
+# Prerequisites: Computer must be connected to Internet via cable.
 
-#Connected via cable
+# Configure the following variables:
 KEYBOARD="us-acentos"
 REGION="America"
 CITY="Sao_Paulo"
