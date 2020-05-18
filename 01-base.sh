@@ -7,6 +7,7 @@ CITY="Sao_Paulo"
 HOST_NAME="home01"
 SWAP_SIZE="2048M"
 WORK_USER="mi"
+WORK_USER_UID="1000"
 SSH_PORT="63169"
 
 
@@ -100,7 +101,7 @@ else # If install.txt does not exists, we are at the new installed environment
 	echo "127.0.1.1	home01.localdomain	${HOST_NAME}" >> /etc/hosts
 
 	# Create new user
-	useradd -m -g users -G wheel $WORK_USER
+	useradd -m -g users -G wheel -u $WORK_USER_UID $WORK_USER
 	yes | pacman -S sudo
 	echo "${WORK_USER} ALL=(ALL) ALL" >> /etc/sudoers
 
