@@ -13,7 +13,7 @@ if grep -q $UUID /etc/fstab
 then
   echo "UUID is already in fstab"
 else
-  echo "${UUID}= ${PATH_TO_MOUNT} ${PARTITION_TYPE} defauts 0 2" >> /etc/fstab
+  echo "UUID=${UUID} ${PATH_TO_MOUNT} ${PARTITION_TYPE} defauts 0 2" >> /etc/fstab
   mkdir ${PATH_TO_MOUNT}
   mount /dev/${FILESERVER_PARTITION} ${PATH_TO_MOUNT}
 fi
