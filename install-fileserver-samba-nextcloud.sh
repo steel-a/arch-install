@@ -8,6 +8,11 @@ SAMBA_FS_PATH="/mnt/data/f"
 
 PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 
+# Install Docker
+yes | pacman -S docker
+systemctl start docker
+systemctl enable docker
+
 UUID="$(blkid | grep ${FILESERVER_PARTITION} | grep -m 1 -oP '((?<=: UUID=")([a-z0-9-]*))')"
 
 if grep -q $UUID /etc/fstab
