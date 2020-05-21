@@ -30,6 +30,7 @@ systemctl enable docker
 # Samba install
 yes | pacman -S samba
 FILE="/etc/samba/smb.conf"
+mkdir -p /usr/local/samba/var/
 
 # smb.conf exists? Create
 if test -f "$FILE";
@@ -46,8 +47,8 @@ then
   echo "${SAMBA_FS_MOUNT_LABEL} entry has alread in smb.conf"
 else
   echo "[${SAMBA_FS_MOUNT_LABEL}]" >> ${FILE}
-  echo "${SAMBA_FS_PATH}" >> ${FILE}
-  echo "valid users =${SAMBA_FS_USER}" >> ${FILE}
+  echo "path = ${SAMBA_FS_PATH}" >> ${FILE}
+  echo "valid users = ${SAMBA_FS_USER}" >> ${FILE}
   echo "read only = no" >> ${FILE}
 fi
 
