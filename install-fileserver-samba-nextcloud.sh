@@ -21,7 +21,7 @@ fi
 
 # Samba install
 yes | pacman -S samba
-FILE=/etc/samba/smb.conf
+FILE="/etc/samba/smb.conf"
 
 # smb.conf exists? Create
 if test -f "$FILE";
