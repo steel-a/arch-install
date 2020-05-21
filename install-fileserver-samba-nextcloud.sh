@@ -2,8 +2,9 @@ FILESERVER_PARTITION="sdb1"
 PATH_TO_MOUNT="/mnt/data"
 PARTITION_TYPE="ext4"
 
-SAMBA_USER="mi"
-SAMBA_MOUNT_LABEL="data"
+SAMBA_FS_USER="mi"
+SAMBA_FS_MOUNT_LABEL="[Fileserver]"
+SAMBA_FS_PATH="/mnt/data/f"
 
 PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 
@@ -18,3 +19,44 @@ else
   mount /dev/${FILESERVER_PARTITION} ${PATH_TO_MOUNT}
 fi
 
+# Samba install
+yes | pacman -S samba
+FILE=/etc/samba/smb.conf
+
+# smb.conf exists? Create
+if test -f "$FILE";
+then
+    echo "smb.conf already exists"
+else
+    echo wget ${proj_path}smb.conf
+    mv smb.conf /etc/samba
+fi
+
+# ${SAMBA_FS_MOUNT_LABEL} in smb.conf? Insert
+if grep -q ${SAMBA_FS_MOUNT_LABEL} ${FILE}
+then
+  echo "${SAMBA_FS_MOUNT_LABEL} entry has alread in smb.conf"
+else
+  echo "${SAMBA_FS_MOUNT_LABEL}" >> ${FILE}
+  echo "${SAMBA_FS_PATH}" >> ${FILE}
+  echo "valid users =${SAMBA_FS_USER}" >> ${FILE}
+  echo "read only = no" >> ${FILE}
+fi
+
+# Samba dir exists? create
+DIR="${SAMBA_FS_PATH}"
+if [ -d "$SAMBA_FS_PATH" ]
+then
+	echo "Samba FS directory [${SAMBA_FS_PATH}] alread exists"
+else
+	mkdir -p $SAMBA_FS_PATH
+  chown ${SAMBA_FS_USER} $SAMBA_FS_PATH
+fi
+
+# Set the root and other user passwords
+clear
+echo "Set password for samba user ${SAMBA_FS_USER}"
+smbpasswd -a ${SAMBA_FS_USER}
+
+systemctl start samba
+systemctl enable samba
