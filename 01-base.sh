@@ -132,10 +132,6 @@ else # If install.txt does not exists, we are at the new installed environment
 	echo "MaxStartups 3" >> /etc/ssh/sshd_config
 	systemctl enable sshd
 	
-	# Install Docker
-	yes | pacman -S docker
-	systemctl enable docker
-	
 	# Set the root and other user passwords
 	clear
 	echo "Set password for root user"
