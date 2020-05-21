@@ -86,9 +86,9 @@ else # If install.txt does not exists, we are at the new installed environment
 	hwclock --systohc
 
 	# Set localization
-	echo "pt_BR.UTF-8 UTF-8" > /etc/locale.gen
+	echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 	locale-gen
-	echo "LANG=pt_BR.UTF-8" > /etc/locale.conf
+	echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
 	# Make Keyboard changes persistent
 	echo "KEYMAP=${KEYBOARD}" > /etc/vconsole.conf
