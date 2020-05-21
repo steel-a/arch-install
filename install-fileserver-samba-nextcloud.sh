@@ -8,11 +8,7 @@ SAMBA_FS_PATH="/mnt/data/f"
 
 PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 
-# Install Docker
-yes | pacman -S docker
-systemctl start docker
-systemctl enable docker
-
+# Mount HD for Fileserver
 UUID="$(blkid | grep ${FILESERVER_PARTITION} | grep -m 1 -oP '((?<=: UUID=")([a-z0-9-]*))')"
 
 if grep -q $UUID /etc/fstab
@@ -23,6 +19,13 @@ else
   mkdir ${PATH_TO_MOUNT}
   mount /dev/${FILESERVER_PARTITION} ${PATH_TO_MOUNT}
 fi
+
+
+# Install Docker
+yes | pacman -S docker
+systemctl start docker
+systemctl enable docker
+
 
 # Samba install
 yes | pacman -S samba
@@ -52,9 +55,9 @@ fi
 DIR="${SAMBA_FS_PATH}"
 if [ -d "$SAMBA_FS_PATH" ]
 then
-	echo "Samba FS directory [${SAMBA_FS_PATH}] alread exists"
+  echo "Samba FS directory [${SAMBA_FS_PATH}] alread exists"
 else
-	mkdir -p $SAMBA_FS_PATH
+  mkdir -p $SAMBA_FS_PATH
   chown ${SAMBA_FS_USER} $SAMBA_FS_PATH
 fi
 
