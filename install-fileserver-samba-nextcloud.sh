@@ -36,7 +36,7 @@ if test -f "$FILE";
 then
     echo "smb.conf already exists"
 else
-    echo wget ${proj_path}smb.conf
+    wget ${proj_path}smb.conf
     mv smb.conf /etc/samba
 fi
 
