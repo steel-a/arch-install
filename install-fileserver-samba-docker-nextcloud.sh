@@ -66,5 +66,5 @@ clear
 echo "Set password for samba user ${SAMBA_FS_USER}"
 smbpasswd -a ${SAMBA_FS_USER}
 
-systemctl start samba
-systemctl enable samba
+systemctl start smb
+systemctl enable smb
