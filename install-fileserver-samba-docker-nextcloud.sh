@@ -3,7 +3,7 @@ PATH_TO_MOUNT="/mnt/data"
 PARTITION_TYPE="ext4"
 
 SAMBA_FS_USER="mi"
-SAMBA_FS_MOUNT_LABEL="[Fileserver]"
+SAMBA_FS_MOUNT_LABEL="Fileserver"
 SAMBA_FS_PATH="/mnt/data/f"
 
 PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
@@ -41,11 +41,11 @@ else
 fi
 
 # ${SAMBA_FS_MOUNT_LABEL} in smb.conf? Insert
-if grep -q ${SAMBA_FS_MOUNT_LABEL} ${FILE}
+if grep -q ${SAMBA_FS_MOUNT_LABEL}] ${FILE}
 then
   echo "${SAMBA_FS_MOUNT_LABEL} entry has alread in smb.conf"
 else
-  echo "${SAMBA_FS_MOUNT_LABEL}" >> ${FILE}
+  echo "[${SAMBA_FS_MOUNT_LABEL}]" >> ${FILE}
   echo "${SAMBA_FS_PATH}" >> ${FILE}
   echo "valid users =${SAMBA_FS_USER}" >> ${FILE}
   echo "read only = no" >> ${FILE}
