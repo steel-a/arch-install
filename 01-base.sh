@@ -40,15 +40,19 @@ if test -f "$FILE"; then
 		fi		
 
 		chmod 700 ${FILE}
-		./creat
+		./create-partitions-boot-linux.sh
 		yes | mkfs.fat -F32 /dev/$HD_EFI
 		yes | mkfs.ext4 /dev/$HD_LINUX
 		mount /dev/$HD_LINUX /mnt
 		mkdir /mnt/boot
+		mkdir /mnt/boot/efi
 		mount /dev/$HD_EFI /mnt/boot/efi
 	else
 		if [[ $HD == *"mmcblk"* ]]; then
 			HD_LINUX=${HD}p1
+		else
+			HD_LINUX=${HD}1
+		fi
 	
 		FILE="./create-partition-linux.sh"
 		if test -f "$FILE";
