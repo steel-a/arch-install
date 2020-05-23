@@ -30,23 +30,36 @@ if test -f "$FILE"; then
 			HD_EFI="${HD}1"
 			HD_LINUX="${HD}2"
 		fi
-		wget ${PROJ_PATH}create-partitions-boot-linux.sh
-		chmod 700 create-partitions-boot-linux.sh
-		./create-partitions-boot-linux.sh
+		
+		FILE="./create-partitions-boot-linux.sh"
+		if test -f "$FILE";
+		then
+			echo "${FILE} already exists"
+		else
+			wget ${PROJ_PATH}create-partitions-boot-linux.sh
+		fi		
+
+		chmod 700 ${FILE}
+		./creat
 		yes | mkfs.fat -F32 /dev/$HD_EFI
 		yes | mkfs.ext4 /dev/$HD_LINUX
 		mount /dev/$HD_LINUX /mnt
 		mkdir /mnt/boot
-		mkdir /mnt/boot/efi
 		mount /dev/$HD_EFI /mnt/boot/efi
 	else
 		if [[ $HD == *"mmcblk"* ]]; then
 			HD_LINUX=${HD}p1
+	
+		FILE="./create-partition-linux.sh"
+		if test -f "$FILE";
+		then
+			echo "${FILE} already exists"
 		else
-			HD_LINUX=${HD}1
-		fi
-		wget ${PROJ_PATH}create-partition-linux.sh
-		chmod 700 create-partition-linux.sh
+			wget ${PROJ_PATH}create-partition-linux.sh
+		fi		
+
+		chmod 700 ${FILE}
+
 		./create-partition-linux.sh
 		yes | mkfs.ext4 /dev/$HD_LINUX
 		mount /dev/$HD_LINUX /mnt
