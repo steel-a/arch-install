@@ -85,7 +85,8 @@ if test -f "$FILE"; then
 	arch-chroot /mnt /root/01-base.sh
 	rm /mnt/root/01-base.sh
 
-else # If install.txt does not exists, we are at the new installed environment
+# If install.txt does not exists, we are at the new installed environment
+else
 
 	# Create swapfile
 	fallocate -l ${SWAP_SIZE} /swapfile
