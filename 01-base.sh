@@ -78,7 +78,7 @@ if test -f "$FILE"; then
 	genfstab -U /mnt > /mnt/etc/fstab
 
 	# Change root into the new system
-	cp ./01-base.sh /mnt/root/01-base.sh
+	cp ./0*.sh /mnt/root/
 	arch-chroot /mnt /root/01-base.sh
 	rm /mnt/root/01-base.sh
 
