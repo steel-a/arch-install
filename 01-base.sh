@@ -17,7 +17,7 @@ PROJ_PATH="https://raw.githubusercontent.com/steel-a/arch-install/master/"
 HD="$(fdisk -l | grep -m 1 -oP "(?<=Disk /dev/)([^l][a-z0-9]*)")"
 
 # If install.txt exists, we are into installation environment
-FILE="./install.txt"
+FILE="/root/install.txt"
 if test -f "$FILE"; then
 
 	# Verify the boot mode, if efivars directory exists, boot mode = EFI
@@ -78,9 +78,10 @@ if test -f "$FILE"; then
 	genfstab -U /mnt > /mnt/etc/fstab
 
 	# Change root into the new system
+	chmod 700 ./*.sh
 	cp ./0*.sh /mnt/root/
 	cp ./*.conf /mnt/root/
-	cp ./*.txt /mnt/root/
+	cp /root/*.txt /mnt/root/
 	arch-chroot /mnt /root/01-base.sh
 	rm /mnt/root/01-base.sh
 
