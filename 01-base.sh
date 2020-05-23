@@ -79,6 +79,8 @@ if test -f "$FILE"; then
 
 	# Change root into the new system
 	cp ./0*.sh /mnt/root/
+	cp ./*.conf /mnt/root/
+	cp ./*.txt /mnt/root/
 	arch-chroot /mnt /root/01-base.sh
 	rm /mnt/root/01-base.sh
 
