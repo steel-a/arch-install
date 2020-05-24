@@ -75,7 +75,7 @@ if test -f "$FILE"; then
 	# Edit mirros /etc/pacman.d/mirrorlist
 
 	# Install LTS with NO FIRMWARE
-	pacstrap /mnt base linux-lts wget nano
+	pacstrap /mnt base linux-lts lm_sensors wget nano
 	#linux-firmware not installed
 
 	# Generate fstab
@@ -151,6 +151,9 @@ else
 	echo "AllowUsers ${WORK_USER}" >> /etc/ssh/sshd_config
 	echo "MaxStartups 3" >> /etc/ssh/sshd_config
 	systemctl enable sshd
+	
+	# LM_Sensors
+	yes | sensors-detect
 	
 	# Set the root and other user passwords
 	clear
