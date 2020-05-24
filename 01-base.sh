@@ -153,7 +153,7 @@ else
 	systemctl enable sshd
 	
 	# LM_Sensors
-	yes | sensors-detect
+	sensors-detect --auto
 	
 	# Set the root and other user passwords
 	clear
