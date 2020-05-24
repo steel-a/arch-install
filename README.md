@@ -15,7 +15,8 @@ I need to alert that the script worked for my servers but it is still in an init
 
 Instructions:
 - boot with the arch linux image
-- wget https://raw.githubusercontent.com/steel-a/arch-install/master/01-base.sh
+- pacman -Sy git
+- git clone https://github.com/steel-a/arch-install
+- cd arch-install
 - edit 01-base.sh and configure variables
-- chmod 700 01-base.sh
-- ./base-01.sh
+- sh ./01-base.sh
