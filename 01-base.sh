@@ -75,7 +75,7 @@ if test -f "$FILE"; then
 	# Edit mirros /etc/pacman.d/mirrorlist
 
 	# Install LTS with NO FIRMWARE
-	pacstrap /mnt base linux-lts wget
+	pacstrap /mnt base linux-lts wget nano
 	#linux-firmware not installed
 
 	# Generate fstab
@@ -85,7 +85,6 @@ if test -f "$FILE"; then
 	chmod 700 ./*.sh
 	cp ./0*.sh /mnt/root/
 	cp ./*.conf /mnt/root/
-	cp /root/*.txt /mnt/root/
 	arch-chroot /mnt /root/01-base.sh
 	rm /mnt/root/01-base.sh
 
