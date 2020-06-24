@@ -2,6 +2,7 @@ FILESERVER_PARTITION="sda1"
 PATH_TO_MOUNT="/mnt/data"
 PARTITION_TYPE="ext4"
 
+DOCKER_USER="mi"
 SAMBA_FS_USER="mi"
 SAMBA_FS_MOUNT_LABEL="Fileserver"
 SAMBA_FS_PATH="/mnt/data/f"
@@ -23,6 +24,7 @@ fi
 
 # Install Docker
 yes | pacman -S docker
+sudo usermod -aG docker $DOCKER_USER
 systemctl start docker
 systemctl enable docker
 
